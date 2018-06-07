@@ -154,7 +154,7 @@ racc_action_default = [
 
 racc_goto_table = [
      2,     9,    75,    36,    51,    43,    23,    38,    25,    76,
-    41,    26,    24,   100,   107,   133,     4,    50,     3,     1,
+    41,    26,   133,   100,   107,    24,     4,    50,     3,     1,
    nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,    70,   nil,
     72,    73,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
    111,   112,   113,   nil,   115,    83,   nil,   nil,   nil,   nil,
@@ -169,7 +169,7 @@ racc_goto_table = [
 
 racc_goto_check = [
      2,     5,    16,     5,    19,    14,     2,     5,    10,    17,
-    20,    11,     6,     7,    15,     8,     4,     2,     3,     1,
+    20,    11,     8,     7,    15,     6,     4,     2,     3,     1,
    nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,     5,   nil,
      5,     5,   nil,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
     16,    16,    16,   nil,    16,     5,   nil,   nil,   nil,   nil,
@@ -183,7 +183,7 @@ racc_goto_check = [
    nil,   nil,   nil,   nil,     2 ]
 
 racc_goto_pointer = [
-   nil,    19,     0,    18,    16,    -4,     5,   -53,  -112,   nil,
+   nil,    19,     0,    18,    16,    -4,     8,   -53,  -115,   nil,
      1,     4,   nil,   nil,   -12,   -57,   -37,   -31,   nil,   -13,
     -3 ]
 

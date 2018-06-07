@@ -161,6 +161,7 @@ end
 
 RDL.type :Hash, :delete_if, '() { (``any_or_k(trec)``, ``any_or_v(trec)``) -> %any } -> self'
 RDL.type :Hash, :delete_if, '() -> ``RDL::Type::GenericType.new(RDL::Type::NominalType.new(Enumerator), RDL::Type::TupleType.new([any_or_k(trec), any_or_v(trec)]))``'
+RDL.type :Hash, :dup, '() -> ``trec``'
 RDL.type :Hash, :each, '() { (``any_or_k(trec)``, ``any_or_v(trec)``) -> %any } -> self'
 RDL.type :Hash, :each, '() -> ``RDL::Type::GenericType.new(RDL::Type::NominalType.new(Enumerator), RDL::Type::TupleType.new([any_or_k(trec), any_or_v(trec)]))``'
 RDL.type :Hash, :each_pair, '() { (``any_or_k(trec)``, ``any_or_v(trec)``) -> %any } -> self'

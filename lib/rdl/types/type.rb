@@ -57,6 +57,12 @@ module RDL::Type
         return left.name == right.name
       end
 
+      # optional
+      if right.is_a?(OptionalType)
+        return true if left.nil_type?
+        return leq(left, right.type, inst, ileft)
+      end
+
       # union
       return left.types.all? { |t| leq(t, right, inst, ileft) } if left.is_a?(UnionType)
       if right.instance_of?(UnionType)
@@ -92,6 +98,24 @@ module RDL::Type
       return left.val == right.val if left.is_a?(SingletonType) && right.is_a?(SingletonType)
       return true if left.is_a?(SingletonType) && left.val.nil? # right cannot be a SingletonType due to above conditional
       return leq(left.nominal, right, inst, ileft) if left.is_a?(SingletonType) # fall through case---use nominal type for reasoning
+
+      # ast nodes
+      if left.is_a?(AstNode) && right.is_a?(GenericType)
+        # TODO: use reference to classes instead of strings
+        return false unless left.op == :SELECT && right.base.to_s == "ActiveRecord_Relation"
+        right.params.each do |param|
+          if param.is_a? NominalType
+            return false unless left.val == param
+          elsif param.is_a? GenericType
+            return false unless param.base.to_s == "JoinTable"
+            join_node = left.find_all(:JOIN)
+            return false unless join_node.size == 1
+            join_node = join_node[0]
+            return left.val.val == param.params[0].klass && Type.leq(join_node.val, param.params[1])
+          end
+        end
+        return true
+      end
 
       # generic
       if left.is_a?(GenericType) && right.is_a?(GenericType)
