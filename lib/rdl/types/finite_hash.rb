@@ -75,11 +75,15 @@ module RDL::Type
         domain_type = UnionType.new(domain_type, RDL::Globals.types[:symbol])
         range_type = UnionType.new(range_type, @rest)
       end
-      return GenericType.new(RDL::Globals.types[:hash], domain_type, range_type)
-      ## TODO: ask what the last line of `promote!` is for
-      ## TODO: Ask about promoting values of hashes, i.e., singleton type keys end up being promoted
-      ## and it seems like the same should be true of singleton type values.
-      ## e.g., { foo: 1 } will be promoted to Hash<Symbol, 1>, seems it should be Hash<Symbol, Integer>.
+      if RDL::Config.instance.promote_widen
+        case range_type
+        when RDL::Type::SingletonType
+          range_type = range_type.nominal if range_type.val
+        when RDL::Type::UnionType
+          range_type = range_type.widen
+        end
+      end
+      return GenericType.new(RDL::Globals.types[:hash], domain_type.canonical, range_type.canonical)
     end
 
     ### [+ key +] is type to add to promoted key types
@@ -135,7 +139,23 @@ module RDL::Type
 
     def instantiate(inst)
       return @the_hash.instantiate(inst) if @the_hash
-      return FiniteHashType.new(Hash[@elts.map { |k, t| [k, t.instantiate(inst)] }], (if @rest then @rest.instantiate(inst) end))
+      #return FiniteHashType.new(Hash[@elts.map { |k, t| [k, t.instantiate(inst)] }], (if @rest then @rest.instantiate(inst) end))
+      @elts = Hash[@elts.map { |k, t| [k, t.instantiate(inst)] }]
+      @rest = @rest.instantiate(inst) if @rest
+      self
+    end
+
+    def widen
+      return @the_hash.widen if @the_hash
+      #return FiniteHashType.new(Hash[@elts.map { |k, t| [k, t.widen] }], (if @rest then @rest.widen end))
+      @elts = Hash[@elts.map { |k, t| [k, t.widen] }]
+      @rest = @rest.widen if @rest
+      self
+    end
+
+    def copy
+      rest = @rest.copy if @rest
+      return FiniteHashType.new(Hash[@elts.map { |k,t| [k, t.copy] }], rest)
     end
 
     def hash

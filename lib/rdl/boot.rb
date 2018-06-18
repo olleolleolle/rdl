@@ -2,6 +2,7 @@ require 'delegate'
 require 'digest'
 require 'set'
 require 'parser/current'
+require 'bigdecimal' ## needed for now to avoid "undefined constant" errors
 
 module RDL
 end
@@ -52,6 +53,9 @@ module RDL::Globals
 
   # List of contracts that should be applied to the next method definition
   @deferred = []
+
+  # List of method types that have a dependent type. Used to type check type-level code.
+  @dep_types = []
 end
 
 class << RDL::Globals # add accessors and readers for module variables
@@ -63,6 +67,7 @@ class << RDL::Globals # add accessors and readers for module variables
   attr_accessor :to_typecheck
   attr_accessor :to_do_at
   attr_accessor :deferred
+  attr_accessor :dep_types
 end
 
 # Create switches to control whether wrapping happens and whether
@@ -164,3 +169,5 @@ class << RDL::Globals
   attr_reader :types
   attr_reader :special_types
 end
+
+require 'rdl/types/rdl_types.rb'
